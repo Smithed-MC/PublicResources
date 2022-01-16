@@ -1,0 +1,110 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+      "$schema": {
+        "type": "string"
+      }
+    },
+    "patternProperties": {
+      "__smithed__": {
+        "$ref": "#/definitions/smithed-schema"
+      }
+    },
+    "additionalProperties": true,
+    "definitions": {
+      "source-reference-schema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "smithed:reference"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "source-value-schema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "smithed:value"
+          },
+          "data": {}
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "smithed-schema": {
+        "properties": {
+          "rules": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "smithed:insert"
+                    },
+                    "index": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "target": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/definitions/source-reference-schema"
+                        },
+                        {
+                          "$ref": "#/definitions/source-value-schema"
+                        }
+                      ]
+                    }
+                  },
+                  "required": ["type","index","target","source"]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "smithed:append",
+                        "smithed:prepend",
+                        "smithed:merge"
+                      ]
+                    },
+                    "target": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/definitions/source-reference-schema"
+                        },
+                        {
+                          "$ref": "#/definitions/source-value-schema"
+                        }
+                      ]
+                    }
+                  },
+                  "required": ["type","target","source"]
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "rules"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
